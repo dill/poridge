@@ -16,56 +16,71 @@
 #' @section Details:
 #' The constructor is not normally called directly, but is rather used internally by \code{\link{gam}}. To use for basis setup it is recommended to use \code{\link{smooth.construct2}}.
 #'
-#' The basis dimension \code{k} will be used as the truncation for the multidimensional scaling
+#' The basis dimension \code{k} will be used as the truncation for the multidimensional scaling.
 #'
-#' When specifying the model extra arguments must be supplied by the \code{xt} 
-#' argument.
+#' When specifying the model extra arguments must be supplied by the \code{xt} argument. Two forms are possible:
+#'
+#' First supplying:
 #' \tabular{ll}{
 #'   \code{realdata} \tab the actual data to use for the model, usual args are ignored\cr
 #'   \code{dist_fn} \tab distance function, takes one arg a \code{data.frame} or \code{matrix}, returns a square distance matrix with \code{nrow(arg)} rows and cols.
 #' }
+#' Or instead supplying: \code{D} a distance matrix.
 #'
 #' NOTE: only 1 krpcr smoother can be included in a model!
 #'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
 smooth.construct.krpcr.smooth.spec <- function(object,data,knots){
-  
-  
+
+
+  ## test what we got given
   # all the extra stuff gets put in object$xt
+  xt <- object$xt
+  if(all(c("D","realdata","dist_fn") %in% names(xt)) |
+     all(c("D","dist_fn") %in% names(xt)) |
+     all(c("D","realdata") %in% names(xt)) |
+     !any(c("D", "realdata", "dist_fn") %in% names(xt))){
+    stop("Please supply either a distance matrix or data and distance function!")
+  }
+
   # distance matrix
-  D <- object$xt$dist_fn(object$xt$realdata)
-  
+  if(all(c("realdata","dist_fn") %in% names(xt))){
+    D <- xt$dist_fn(xt$realdata)
+  }else{
+    D <- xt$D
+  }
+
   # projection dimension
   pdim <- object$bs.dim
-  
+
   ## do some input checking
   # either K or D must be supplied
   if(is.null(D)) {
-    stop("You must supply a distance matrix!")
+    stop("No distance matrix!")
   }
   # default to fast cmdscale
-  if(is.null(object$xt$fastcmd)){
-    object$xt$fastcmd <- TRUE
+  if(is.null(xt$fastcmd)){
+    xt$fastcmd <- TRUE
   }
 
   ## if K not supplied then compute from D?
   #if(is.null(K) & !is.null(D)) {
   #  K <- d2k(D, cailliez = cailliez, truncate = truncate)
   #}
-  
+
   # what do cmdscale options mean?!
   # k     - dimension of MDS projection
   # eig   - return eigenvalues
   # x.ret - return (double centred distance matrix)
   # add   - add a constant so D is Euclidean (cov() gives -ve
   #         values, which is not a property of a distance.
-  if(object$xt$fastcmd){
+  if(xt$fastcmd){
     # use lanczos for the eigendecomposition
     mds.obj <- cmdscale_lanczos(D, k=pdim, eig=TRUE, x.ret=TRUE, add=TRUE)
   }else{
     mds.obj <- cmdscale(D, k=pdim, eig=TRUE, x.ret=TRUE, add=TRUE)
   }
-  
+
   ## four required additions to the return object:
   # model matrix
   object$X <- mds.obj$points
@@ -76,33 +91,37 @@ smooth.construct.krpcr.smooth.spec <- function(object,data,knots){
   object$rank <- array(pdim, dim=c(1,1))
   # null space dimension
   object$null.space.dim <- 0
-  
+
   # set the label (for plots and summary)
   object$label <- object$term
-  
+
   # now reset the terms so we include ALL possible
-  #variables (though we limit to pdim in reality)
-  object$term <- paste0("krpcr_", 1:ncol(object$xt$realdata))
-  
+  # variables (though we limit to pdim in reality)
+  if(all(c("realdata","dist_fn") %in% names(xt))){
+    object$term <- paste0("krpcr_", 1:ncol(object$xt$realdata))
+  }else{
+    object$term <- paste0("krpcr_", 1)
+  }
+
   # store dimension
   object$dim <- pdim
-  
+
   ## extra options
   # don't allow tensor products
   object$te.ok <- 0
   # probably best not to plot this with plot.gam
   # (what would the x axis be?)
   object$plot.me <- FALSE
-  
+
   # see ?smooth.construct for what these mean!
   object$C <- array(dim=c(0, 1))
   object$side.constrain <- FALSE
-  
+
   object$no.rescale <- TRUE
-  
+
   # save mds object returned by cmdscale
   object$xt$mds.obj <- mds.obj
-  
+
   # give it some class
   class(object) <- "krpcr.smooth"
   return(object)
