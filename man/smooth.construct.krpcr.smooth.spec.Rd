@@ -35,8 +35,6 @@ First supplying:
   \code{dist_fn} \tab distance function, takes one arg a \code{data.frame} or \code{matrix}, returns a square distance matrix with \code{nrow(arg)} rows and cols.
 }
 Or instead supplying: \code{D} a distance matrix.
-
-NOTE: only 1 krpcr smoother can be included in a model!
 }
 \author{
 David L Miller, based on code from Lan Huo and Phil Reiss

@@ -27,8 +27,6 @@
 #' }
 #' Or instead supplying: \code{D} a distance matrix.
 #'
-#' NOTE: only 1 krpcr smoother can be included in a model!
-#'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
 smooth.construct.krpcr.smooth.spec <- function(object,data,knots){
 
