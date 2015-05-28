@@ -13,7 +13,7 @@
 #' @author David L Miller
 # @importFrom mgcv slanczos
 cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
-  
+
   if (anyNA(d))
     stop("NA values not allowed in 'd'")
   if (is.null(n <- attr(d, "Size"))) {
@@ -35,16 +35,16 @@ cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
     }
   }
   n <- as.integer(n)
-  
+
   ## we need to handle nxn internally in dblcen
   if(is.na(n) || n > 46340) stop("invalid value of 'n'")
   if((k <- as.integer(k)) > n - 1 || k < 1)
     stop("'k' must be in {1, 2, .. n - 1}")
-  
+
   ## NB: this alters argument x, which is OK as it is re-assigned.
   #x <- .Call(stats::C_DoubleCentre, x)
   x <- scale(t(scale(t(x), scale=FALSE)),scale=FALSE)
-  
+
   if(add) { ## solve the additive constant problem
     ## it is c* = largest eigenvalue of 2 x 2 (n x n) block matrix Z:
     i2 <- n + (i <- 1L:n)
@@ -53,9 +53,9 @@ cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
     Z[ i, i2] <- -x
 #    Z[i2, i2] <- .Call(stats::C_DoubleCentre, 2*d)
     Z[i2, i2] <- scale(t(scale(t(2*d), scale=FALSE)),scale=FALSE)
-    
+
     ###### this is where Dave modified things
-    add.c <- slanczos(Z, k=1)$values
+    add.c <- max(slanczos(Z, k=1, kl=1)$values)
     #e <- eigen(Z, symmetric = FALSE, only.values = TRUE)$values
     #add.c <- max(Re(e))
     ## and construct a new x[,] matrix:
@@ -65,20 +65,20 @@ cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
     #x <- .Call(stats::C_DoubleCentre, x)
     x <- scale(t(scale(t(x), scale=FALSE)),scale=FALSE)
   }
-  
+
   ###### this is where Dave modified things
   e <- slanczos(-x/2, k=k)
   ev <- e$values#[seq_len(k)]
   evec <- e$vectors#[, seq_len(k), drop = FALSE]
   k1 <- sum(ev > 0)
-  
+
   if(k1 < k) {
     warning(gettextf("only %d of the first %d eigenvalues are > 0", k1, k),
             domain = NA)
     evec <- evec[, ev > 0, drop = FALSE]
     ev <- ev[ev > 0]
   }
-  
+
   points <- evec * rep(sqrt(ev), each=n)
   dimnames(points) <- list(rn, NULL)
   if (eig || x.ret || add) {
@@ -88,4 +88,3 @@ cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
          GOF = sum(ev)/c(sum(abs(evalus)), sum(pmax(evalus, 0))) )
   } else points
 }
-

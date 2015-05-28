@@ -63,7 +63,7 @@ smooth.construct.krpcr.smooth.spec <- function(object,data,knots){
 
   ## if K not supplied then compute from D?
   #if(is.null(K) & !is.null(D)) {
-  #  K <- d2k(D, cailliez = cailliez, truncate = truncate)
+  #  D <- d2k(D, cailliez = cailliez, truncate = truncate)
   #}
 
   # what do cmdscale options mean?!

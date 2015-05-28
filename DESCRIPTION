@@ -1,7 +1,7 @@
 Package: krpcr
 Type: Package
 Title: kernel ridge PCR
-Version: 1.0
+Version: 1.1
 Date: 2015-03-02
 Author: David L Miller
 Maintainer: Philip Reiss  <Phil.Reiss@nyumc.org>
