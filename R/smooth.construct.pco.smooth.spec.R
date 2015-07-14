@@ -27,6 +27,8 @@
 #' }
 #' Or instead supplying: \code{D} a distance matrix.
 #'
+#' One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details.
+#'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
 smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
@@ -66,6 +68,14 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
   #  D <- d2k(D, cailliez = cailliez, truncate = truncate)
   #}
 
+
+  # use the additive constant?
+  if(!is.null(xt$add)){
+    add <- xt$add
+  }else{
+    add <- TRUE
+  }
+
   # what do cmdscale options mean?!
   # k     - dimension of MDS projection
   # eig   - return eigenvalues
@@ -74,9 +84,9 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
   #         values, which is not a property of a distance.
   if(xt$fastcmd){
     # use lanczos for the eigendecomposition
-    mds.obj <- cmdscale_lanczos(D, k=pdim, eig=TRUE, x.ret=TRUE, add=TRUE)
+    mds.obj <- cmdscale_lanczos(D, k=pdim, eig=TRUE, x.ret=TRUE, add=add)
   }else{
-    mds.obj <- cmdscale(D, k=pdim, eig=TRUE, x.ret=TRUE, add=TRUE)
+    mds.obj <- cmdscale(D, k=pdim, eig=TRUE, x.ret=TRUE, add=add)
   }
 
   ## four required additions to the return object:

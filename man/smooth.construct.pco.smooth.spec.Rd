@@ -34,6 +34,8 @@ First supplying:
   \code{dist_fn} \tab distance function, takes one arg a \code{data.frame} or \code{matrix}, returns a square distance matrix with \code{nrow(arg)} rows and cols.
 }
 Or instead supplying: \code{D} a distance matrix.
+
+One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details.
 }
 \author{
 David L Miller, based on code from Lan Huo and Phil Reiss
