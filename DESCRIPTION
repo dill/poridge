@@ -1,11 +1,11 @@
-Package: krpcr
+Package: poridge
 Type: Package
-Title: kernel ridge PCR
+Title: Principal Co-Ordinate Ridge regression
 Version: 1.1
 Date: 2015-03-02
 Author: David L Miller
 Maintainer: Philip Reiss  <Phil.Reiss@nyumc.org>
-Description: kernel ridge generalized additive model 
+Description: Principal co-Ordinate Ridge regression
 Depends:
     R (>= 3.0.0),
     mgcv
