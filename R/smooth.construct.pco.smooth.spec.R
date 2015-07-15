@@ -1,6 +1,5 @@
 #' Build a PCO smoother
 #'
-#' 
 #' Note that the usual \code{k} argument to \code{\link{s}} will set the projection dimension.
 #'
 #' @aliases pco smooth.construct.pco.smooth.spec
@@ -27,7 +26,7 @@
 #' }
 #' Or instead supplying: \code{D} a distance matrix.
 #'
-#' One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details.
+#' One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details. Defaults to \code{FALSE}.
 #'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
 smooth.construct.pco.smooth.spec <- function(object, data, knots){
@@ -70,10 +69,11 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
 
   # use the additive constant?
+  # default to FALSE
   if(!is.null(xt$add)){
     add <- xt$add
   }else{
-    add <- TRUE
+    add <- FALSE
   }
 
   # what do cmdscale options mean?!
