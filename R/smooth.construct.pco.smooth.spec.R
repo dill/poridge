@@ -89,6 +89,10 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
     mds.obj <- cmdscale(D, k=pdim, eig=TRUE, x.ret=TRUE, add=add)
   }
 
+  if(sum(mds.obj$eig>0) < pdim){
+    stop("Only the first ",sum(mds.obj$eig>0)," eigenvalues are positive, this is the maximum projection dimension without setting 'add=TRUE', see ?smooth.construct.pco.smooth.spec for further information.")
+  }
+
   ## four required additions to the return object:
   # model matrix
   object$X <- mds.obj$points
