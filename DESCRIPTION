@@ -1,6 +1,6 @@
 Package: poridge
 Type: Package
-Title: Principal Co-Ordinate Ridge regression
+Title: Principal Co-Ordinate Ridge Regression
 Version: 1.1
 Date: 2015-03-02
 Author: David L Miller
