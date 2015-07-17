@@ -60,12 +60,12 @@ D <- dist(X.toy, method="dtw", window.type="sakoechiba", window.size=5)
 ```
 
 
-Here we fit a series of models with different projection dimensions from 1 to 15 and store the GCV scores. For each projection dimension we fit two models, one using the distances calculated from `dist` in R (`m1`) and one with DTW distance calculated above (`m2`).
+Here we fit a series of models with different projection dimensions from 1 to 8 and store the GCV scores. For each projection dimension we fit two models, one using the distances calculated from `dist` in R (`m1`) and one with DTW distance calculated above (`m2`).
 
 ```{r}
-GCVmat <- matrix(NA, 15, 2)
+GCVmat <- matrix(NA, 8, 2)
 
-for(k. in 1:15){
+for(k. in 1:8){
   m1 <- gam(y.toy ~ s(dummy, bs="pco", k=k., xt=list(realdata=X.toy, dist_fn=dist)), method="REML")
   m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k., xt=list(D=D)), method="REML")
 
@@ -90,15 +90,15 @@ which.min(GCVmat[,2])
 So, refitting the model with projection dimension 11:
 
 ```{r}
-m2 <- gam(y.toy ~ s(dummy, bs="pco", k=11, xt=list(D=D)), method="REML")
+m2 <- gam(y.toy ~ s(dummy, bs="pco", k=8, xt=list(D=D)), method="REML")
 summary(m2)
 ```
 
 
 
-## What if `add=FALSE`
+## What if `add=TRUE`
 
-By default we set `add=TRUE` in the MDS step, adding a constant to the distance matrix if necessary to ensure that it is Euclidean (see `?cmdscale`). Let's see what happens when we turn that option off:
+By default we set `add=FALSE` in the MDS step. By setting this to be `TRUE` we add a constant to the distance matrix to ensure that it is Euclidean (see `?cmdscale`). We can now test much higher projection dimensions, since the eigenvalues will be positive.
 
 
 ```{r}
@@ -106,8 +106,8 @@ GCVmat_add <- matrix(NA, 15, 2)
 
 for (k. in 1:15) {
     m1 <- gam(y.toy ~ s(dummy, bs="pco", k=k.,
-                        xt=list(realdata=X.toy, dist_fn=dist, add=FALSE)), method="REML")
-    m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k., xt=list(D=D, add=FALSE)), method="REML")
+                        xt=list(realdata=X.toy, dist_fn=dist, add=TRUE)), method="REML")
+    m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k., xt=list(D=D, add=TRUE)), method="REML")
 
     GCVmat_add[k., ] = length(y.toy) * c(sum(m1$residuals^2)/m1$df.residual^2,
                                          sum(m2$residuals^2)/m2$df.residual^2)
@@ -123,8 +123,10 @@ legend("bottomleft", c("PCR", "DTW-based PCoR"), lty=1, col=1:2, pch=16, cex=1.5
 ```
 
 ```{r}
-m2_add <- gam(y.toy ~ s(dummy, bs="pco", k=which.min(GCVmat[,2]), xt=list(D=D, add=FALSE)), method="REML")
+m2_add <- gam(y.toy ~ s(dummy, bs="pco", k=which.min(GCVmat_add[,2]), xt=list(D=D, add=TRUE)), method="REML")
 summary(m2_add)
 ```
 
-There doesn't seem to be a difference.
+Note we can now fit a model with dimension 11 (minimum by GCV score) rather than 8 (the highest basis dimension possible with `add=FALSE`).
+
+
