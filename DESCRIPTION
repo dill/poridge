@@ -8,5 +8,6 @@ Maintainer: Philip Reiss  <Phil.Reiss@nyumc.org>
 Description: Principal co-Ordinate Ridge regression
 Depends:
     R (>= 3.0.0),
-    mgcv
+    mgcv,
+    dtw
 License: GPL (>= 2)

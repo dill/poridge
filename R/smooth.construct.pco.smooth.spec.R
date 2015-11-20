@@ -36,6 +36,51 @@
 #' }
 #'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
+#'
+#' @examples
+#' require(poridge)
+#' require(dtw)
+#'
+#' # Generate toy data
+#' Xnl <- matrix(0, 30, 101)
+#' set.seed(813)
+#' tt <- sort(sample(1:90, 30))
+#' for (i in 1:30) {
+#'   Xnl[i, tt[i]:(tt[i]+4)] <- -1
+#'   Xnl[i, (tt[i]+5):(tt[i]+9)] <- 1
+#' }
+#' X.toy <- Xnl + matrix(rnorm(30*101, ,0.05), 30)
+#' y.toy <- tt + rnorm(30, 0.05)
+#' y.rainbow <- rainbow(30, end=0.9)[(y.toy-min(y.toy))/diff(range(y.toy))*29+1]
+#'
+#' # Display the toy data (Figure 1)
+#' par(mfrow=c(2, 2))
+#' matplot((0:100)/100, t(Xnl[c(4, 25), ]), type="l", xlab="t", ylab="",
+#'         ylim=range(X.toy), main="Noiseless functions")
+#' matplot((0:100)/100, t(X.toy[c(4, 25), ]), type="l", xlab="t", ylab="",
+#'         ylim=range(X.toy), main="Observed functions")
+#' matplot((0:100)/100, t(X.toy), type="l", lty=1, col=y.rainbow, xlab="t",
+#'         ylab="", main="Rainbow plot")
+#'
+#' # Obtain DTW distances
+#' D <- dist(X.toy, method="dtw", window.type="sakoechiba", window.size=5)
+#'
+#' # Compare PC vs. PCo ridge regression
+#' GCVmat <- matrix(NA, 15, 2)
+#' dummy<-rep(1,30)
+#' for (k. in 1:15) {
+#'     m1 <- gam(y.toy ~ s(dummy, bs="pco", k=k.,
+#'               xt=list(realdata=X.toy, dist_fn=dist)), method="REML")
+#'     m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k., xt=list(D=D)), method="REML")
+#'     GCVmat[k., ] <- length(y.toy) * c(sum(m1$residuals^2)/m1$df.residual^2,
+#'                      sum(m2$residuals^2)/m2$df.residual^2)
+#' }
+#'
+#' matplot(GCVmat, lty=1:2, col=1, pch=16:17, type="o", ylab="GCV",
+#'         xlab="Number of principal components / coordinates",
+#'         main="GCV score")
+#' legend("right", c("PCR", "DTW-based PCoR"), lty=1:2, pch=16:17)
+#'
 smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
 
