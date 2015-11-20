@@ -3,7 +3,7 @@
 \name{smooth.construct.pco.smooth.spec}
 \alias{pco}
 \alias{smooth.construct.pco.smooth.spec}
-\title{Build a PCO smoother}
+\title{Build a PCoRR smoother}
 \usage{
 \method{smooth.construct}{pco.smooth.spec}(object, data, knots)
 }
@@ -18,6 +18,9 @@
 An object of class \code{pco.smooth}.
 }
 \description{
+Builds a basis and penalty that allows one to regress the response on leading principal coordinates defined by a relevant distance among the functional predictors, applying a ridge penalty.
+}
+\details{
 Note that the usual \code{k} argument to \code{\link{s}} will set the projection dimension.
 }
 \section{Details}{
@@ -29,13 +32,17 @@ The basis dimension \code{k} will be used as the truncation for the multidimensi
 When specifying the model extra arguments must be supplied by the \code{xt} argument. Two forms are possible:
 
 First supplying:
-\tabular{ll}{
-  \code{realdata} \tab the actual data to use for the model, usual args are ignored\cr
-  \code{dist_fn} \tab distance function, takes one arg a \code{data.frame} or \code{matrix}, returns a square distance matrix with \code{nrow(arg)} rows and cols.
+\itemize{
+  \item \code{realdata} the actual data to use for the model, usual args are ignored\cr
+  \item \code{dist_fn} distance function. It will take one argument: a \code{data.frame} or \code{matrix} of data locations and returns a square distance matrix with number of rows and columns equal to the number of rows in the data passed to it.
 }
 Or instead supplying: \code{D} a distance matrix.
 
-One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details. Defaults to \code{FALSE}.
+One may also supply the following to \code{xt}:
+\itemize{
+  \item \code{add} if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details. (Default \code{FALSE}.)\cr
+   \item \code{fastcmd} should eigendecompositions of the distance matrix be calculated using \code{\link{slanczos}} (\code{fastcmd=TRUE}) or using \code{\link{cmdscale}} (\code{fastcmd=FALSE})?
+}
 }
 \author{
 David L Miller, based on code from Lan Huo and Phil Reiss

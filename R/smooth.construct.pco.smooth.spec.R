@@ -1,4 +1,7 @@
-#' Build a PCO smoother
+#' Build a PCoRR smoother
+#'
+#' Builds a basis and penalty that allows one to regress the response on leading principal coordinates defined by a relevant distance among the functional predictors, applying a ridge penalty.
+#'
 #'
 #' Note that the usual \code{k} argument to \code{\link{s}} will set the projection dimension.
 #'
@@ -20,13 +23,17 @@
 #' When specifying the model extra arguments must be supplied by the \code{xt} argument. Two forms are possible:
 #'
 #' First supplying:
-#' \tabular{ll}{
-#'   \code{realdata} \tab the actual data to use for the model, usual args are ignored\cr
-#'   \code{dist_fn} \tab distance function, takes one arg a \code{data.frame} or \code{matrix}, returns a square distance matrix with \code{nrow(arg)} rows and cols.
+#' \itemize{
+#'   \item \code{realdata} the actual data to use for the model, usual args are ignored\cr
+#'   \item \code{dist_fn} distance function. It will take one argument: a \code{data.frame} or \code{matrix} of data locations and returns a square distance matrix with number of rows and columns equal to the number of rows in the data passed to it.
 #' }
 #' Or instead supplying: \code{D} a distance matrix.
 #'
-#' One may also supply \code{add} to \code{xt}, if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details. Defaults to \code{FALSE}.
+#' One may also supply the following to \code{xt}:
+#' \itemize{
+#'   \item \code{add} if \code{TRUE} then a constant is added to the distance matrix before the MDS is calculated, ensuring that the distances are non-negative. See \code{\link{cmdscale}} for details. (Default \code{FALSE}.)\cr
+#'    \item \code{fastcmd} should eigendecompositions of the distance matrix be calculated using \code{\link{slanczos}} (\code{fastcmd=TRUE}) or using \code{\link{cmdscale}} (\code{fastcmd=FALSE})?
+#' }
 #'
 #' @author David L Miller, based on code from Lan Huo and Phil Reiss
 smooth.construct.pco.smooth.spec <- function(object, data, knots){
@@ -57,9 +64,9 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
   if(is.null(D)) {
     stop("No distance matrix!")
   }
-  # default to fast cmdscale
+  # default to use regular cmdscale
   if(is.null(xt$fastcmd)){
-    xt$fastcmd <- TRUE
+    xt$fastcmd <- FALSE
   }
 
   ## if K not supplied then compute from D?
@@ -109,7 +116,7 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
   # now reset the terms so we include ALL possible
   # variables (though we limit to pdim in reality)
-  if(all(c("realdata","dist_fn") %in% names(xt))){
+  if(all(c("realdata", "dist_fn") %in% names(xt))){
     object$term <- paste0("pco_", 1:ncol(object$xt$realdata))
   }else{
     object$term <- paste0("pco_", 1)
