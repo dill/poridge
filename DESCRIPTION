@@ -2,12 +2,12 @@ Package: poridge
 Type: Package
 Title: Principal Co-Ordinate Ridge Regression
 Version: 1.1
-Date: 2015-03-02
 Author: David L Miller
 Maintainer: Philip Reiss  <Phil.Reiss@nyumc.org>
-Description: Principal co-Ordinate Ridge regression
+Description: Principal co-Ordinate Ridge regression, implemented as a basis (smooth.construct method) for mgcv.
 Depends:
     R (>= 3.0.0),
-    mgcv,
+    mgcv
+Suggests:
     dtw
 License: GPL (>= 2)
