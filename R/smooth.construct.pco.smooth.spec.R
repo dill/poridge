@@ -3,7 +3,7 @@
 #' Build a basis and (ridge) penalty that allows one to regress the response on leading principal coordinates defined by a relevant distance among the functional predictors.
 #'
 #'
-#' @aliases pco smooth.construct.pco.smooth.spec
+#' @aliases pco smooth.construct.pco.smooth.spec Predict.matrix.pco.smooth
 #' @export
 #' @import mgcv
 #'
