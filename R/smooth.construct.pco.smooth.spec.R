@@ -170,11 +170,11 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
   # now reset the terms so we include ALL possible
   # variables (though we limit to pdim in reality)
-  if(all(c("realdata", "dist_fn") %in% names(xt))){
-    object$term <- paste0("pco_", 1:ncol(object$xt$realdata))
-  }else{
-    object$term <- paste0("pco_", 1)
-  }
+  #if(all(c("realdata", "dist_fn") %in% names(xt))){
+  #  object$term <- paste0("pco_", 1:ncol(object$xt$realdata))
+  #}else{
+  #  object$term <- c("dummy",paste0(object$term,"_", 1:pdim))
+  #}
 
   # store dimension
   object$dim <- pdim
