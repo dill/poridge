@@ -91,6 +91,25 @@ matplot(GCVmat, lty=1:2, col=1, pch=16:17, type="o", ylab="GCV",
         xlab="Number of principal components / coordinates",
         main="GCV score")
 legend("right", c("PC ridge regression", "DTW-based PCoRR"), lty=1:2, pch=16:17)
+
+## example of making a prediction
+
+# fit a model to the toy data
+m <- gam(y.toy ~ s(dummy, bs="pco", k=2, xt=list(D=D.dtw)), method="REML")
+
+# first build the distance matrix
+# in this case we just subsample the original matrix
+# see ?pco_predict_preprocess for more information on formatting this data
+dist_list <- list(dummy = as.matrix(D.dtw)[, c(1:5,10:15)])
+
+# preprocess the prediction data
+pred_data <- pco_predict_preprocess(m, newdata=NULL, dist_list)
+
+# make the prediction
+p <- predict(m, pred_data)
+
+# check that these are the same as the corresponding fitted values
+print(cbind(fitted(m)[ c(1:5,10:15)],p))
 }
 \author{
 David L Miller, based on code from Lan Huo and Phil Reiss
