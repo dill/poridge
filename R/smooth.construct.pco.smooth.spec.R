@@ -1,9 +1,8 @@
-#' Build a PCoRR smoother
+#' Principal coordinate ridge regression
 #'
-#' Build a basis and (ridge) penalty that allows one to regress the response on leading principal coordinates defined by a relevant distance among the functional predictors.
+#' Build a basis and (ridge) penalty that allows one to regress the response on leading principal coordinates defined by a relevant distance among the functional predictors. The basis is constructed by taking distances between the predictors (which are usually functional) and applying a ridge penalty.
 #'
-#'
-#' @aliases pco smooth.construct.pco.smooth.spec Predict.matrix.pco.smooth
+#' @aliases pco smooth.construct.pco.smooth.spec Predict.matrix.pco.smooth poridge
 #' @export
 #' @import mgcv
 #'
@@ -167,14 +166,6 @@ smooth.construct.pco.smooth.spec <- function(object, data, knots){
 
   # set the label (for plots and summary)
   object$label <- object$term
-
-  # now reset the terms so we include ALL possible
-  # variables (though we limit to pdim in reality)
-  #if(all(c("realdata", "dist_fn") %in% names(xt))){
-  #  object$term <- paste0("pco_", 1:ncol(object$xt$realdata))
-  #}else{
-  #  object$term <- c("dummy",paste0(object$term,"_", 1:pdim))
-  #}
 
   # store dimension
   object$dim <- pdim
