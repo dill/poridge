@@ -8,7 +8,7 @@
 #'
 #' @param model a fitted \code{\link[mgcv]{gam}} model with at least one term of class "\code{pco.smooth}"
 #' @param newdata data frame including the new values for any non-\code{\link{pco}} terms in the original fit. If there were none, this can be left as \code{NULL}.
-#' @param dist_list a list of \code{n\times n*} matrices, one per \code{\link{pco}} term in the model, giving the distances from the \code{n*} prediction points to the \code{n} design points (original observations). List entry names should correspond to the names of the terms in the model (e.g., if the model includes a \code{s(x)} term, \code{dist_list} must include an element named "\code{x}").
+#' @param dist_list a list of \code{n} \eqn{\times} \code{n*} matrices, one per \code{\link{pco}} term in the model, giving the distances from the \code{n*} prediction points to the \code{n} design points (original observations). List entry names should correspond to the names of the terms in the model (e.g., if the model includes a \code{s(x)} term, \code{dist_list} must include an element named "\code{x}").
 #'
 #' @return a \code{\link{data.frame}} with the coordinates for the new data inserted into principal coordinate space, in addition to the supplied \code{newdata} if this was non-\code{NULL}. This can be used as the \code{newdata} argument in a call to \code{\link[mgcv]{predict.gam}}.
 #' @author David L Miller
