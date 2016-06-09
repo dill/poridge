@@ -1,20 +1,21 @@
-#' Make predictions using the pco basis
+#' Make predictions using pco basis terms
 #'
-#' Making predictions using the \code{pco} basis requires some pre-processing of the data first. The function \code{pco_predict_preprocess} builds a \code{data.frame} (or augments an existing one) to be used with the usual \code{predict} function.
+#' This function performs the necessary preprocessing for making predictions with \code{\link[mgcv]{gam}} models that include \code{\link{pco}} basis terms. The function \code{pco_predict_preprocess} builds a \code{data.frame} (or augments an existing one) to be used with the usual \code{predict} function.
 #'
-#' The function takes uses the distances from the data in the model to the prediction points and uses Gower's interpolation to "insert" the prediction points into the existing multidimensional scaling projection. These new coordinates are returned.
+#' Models with \code{\link{pco}} basis terms are fitted by inputting distances among the observations and then regressing (with a ridge penalty) on leading principal coordinates arising from these distances. To perform prediction, we must input the distances from the new data points to the original points, and then "insert" the former into the principal coordinate space by the interpolation method of Gower (1968).  
 #'
-#' @param model a fitted model with at least one term of class \code{pco.smooth}
-#' @param newdata prediction data
-#' @param dist_list a list of distance matrices, each of which has distances from observations to prediction points. Each matrix should have number of rows identical to the number of observations in the model and as many columns as there are prediction points. List entries need the name of the term they refer to as their element name (e.g., if the term is \code{s(x)}, then the corresponding matrix element will be named "\code{x}").
+#' @param model a fitted \code{\link[mgcv]{gam}} model with at least one term of class "\code{pco.smooth}"
+#' @param newdata data frame including the new values for any non-\code{\link{pco}} terms in the original fit. If there were none, this can be left as \code{NULL}.
+#' @param dist_list a list of \code{n*\times n} matrices, one per \code{\link{pco}} term in the model, giving the distances from the \code{n*} prediction points to the \code{n} design points (original observations). List entry names should correspond to the names of the terms in the model (e.g., if the model includes a \code{s(x)} term, \code{dist_list} must include an element named "\code{x}").
 #'
-#' @return a \code{data.frame}, either the \code{newdata} augmented with new columns or a \code{data.frame} with just those columns.
+#' @return a \code{\link{data.frame}} with the coordinates for the new data inserted into principal coordinate space, in addition to the supplied \code{newdata} if this was non-\code{NULL}. This can be used as the \code{newdata} argument in a call to \code{\link[mgcv]{predict.gam}}.
 #' @author David L Miller
 #' @export
 #' @references
-#' Gower, J. C. (1968). Adding a point to vector diagrams in multivariate analysis. Biometrika, 55(3), 582. http://doi.org/10.2307/2334268
+#' Gower, J. C. (1968). Adding a point to vector diagrams in multivariate analysis. Biometrika, 55(3), 582-585. \url{http://doi.org/10.2307/2334268}
 #'
-#' Miller, D. L. (2012). On Smooth Models for Complex Domains and Distances. (S. N. Wood, Ed.). Retrieved from http://opus.bath.ac.uk/31800/
+#' Miller, D. L. (2012). On smooth models for complex domains and distances. PhD dissertation, Department of Mathematical Sciences, University of Bath. Available at \url{http://opus.bath.ac.uk/31800/}
+#' @seealso \code{\link{smooth.construct.pco.smooth.spec}}
 pco_predict_preprocess <- function(model, newdata=NULL, dist_list){
 
   # populate newdata

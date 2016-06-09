@@ -1,16 +1,20 @@
 #' Faster multi-dimensional scaling
 #'
-#' This is a stand-in replacement for \code{\link{cmdscale}} that uses the Lanczos procedure (\code{slanczos}) in \code{\link{mgcv}}) instead of \code{eigen}. Much of the code is based on \code{cmdscale}.
+#' This is a modified version of \code{\link{cmdscale}} that uses the Lanczos procedure (\code{\link[mgcv]{slanczos}}) instead of \code{eigen}. Called by \code{\link{smooth.construct.pco.smooth.spec}}. 
 #'
-#' @param d a distance structure such as that returned by 'dist' or a full symmetric matrix containing the dissimilarities.
+#' @param d a distance structure as returned by \code{\link{dist}}, or a full symmetric matrix of distances or dissimilarities.
 #' @param k the maximum dimension of the space which the data are to be represented in; must be in \code{\{1, 2, ..., n-1\}}.
-#' @param eig indicates whether eigenvalues should be returned.
-#' @param add logical indicating if an additive constant c* should be computed, and added to the non-diagonal dissimilarities such that the modified dissimilarities are Euclidean.
+#' @param eig logical indicating whether eigenvalues should be returned.
+#' @param add logical indicating if the additive constant of Cailliez (1983) should be computed, and added to the non-diagonal dissimilarities such that the modified dissimilarities are Euclidean.
 #' @param x.ret indicates whether the doubly centred symmetric distance matrix should be returned.
 #' @return as \code{\link{cmdscale}}
 #'
 #' @author David L Miller, based on code by R Core.
+#' @seealso \code{\link{smooth.construct.pco.smooth.spec}}
 # @importFrom mgcv slanczos
+#' @references
+#' Cailliez, F. (1983). The analytical solution of the additive constant problem. 
+#' \emph{Psychometrika}, 48, 343-349.
 cmdscale_lanczos <- function(d, k = 2, eig = FALSE, add = FALSE, x.ret = FALSE){
 
   if (anyNA(d))
