@@ -2,11 +2,11 @@
 #'
 #' This function performs the necessary preprocessing for making predictions with \code{\link[mgcv]{gam}} models that include \code{\link{pco}} basis terms. The function \code{pco_predict_preprocess} builds a \code{data.frame} (or augments an existing one) to be used with the usual \code{predict} function.
 #'
-#' Models with \code{\link{pco}} basis terms are fitted by inputting distances among the observations and then regressing (with a ridge penalty) on leading principal coordinates arising from these distances. To perform prediction, we must input the distances from the new data points to the original points, and then "insert" the former into the principal coordinate space by the interpolation method of Gower (1968).
+#' Models with \code{\link{pco}} basis terms are fitted by inputting distances among the observations and then regressing (with a ridge penalty) on leading principal coordinates arising from these distances. To perform prediction, we must input the distances from the new data points to the original points, and then "insert" the former into the principal coordinate space by the interpolation method of Gower (1968) (see also Miller, 2012).
 #'
 #' An example of how to use this function in practice is shown in \code{\link{smooth.construct.pco.smooth.spec}}.
 #'
-#' @param model a fitted \code{\link[mgcv]{gam}} model with at least one term of class "\code{pco.smooth}"
+#' @param model a fitted \code{\link[mgcv]{gam}} model with at least one term of class "\code{pco.smooth}".
 #' @param newdata data frame including the new values for any non-\code{\link{pco}} terms in the original fit. If there were none, this can be left as \code{NULL}.
 #' @param dist_list a list of \code{n} \eqn{\times} \code{n*} matrices, one per \code{\link{pco}} term in the model, giving the distances from the \code{n*} prediction points to the \code{n} design points (original observations). List entry names should correspond to the names of the terms in the model (e.g., if the model includes a \code{s(x)} term, \code{dist_list} must include an element named "\code{x}").
 #'

@@ -24,12 +24,12 @@ Smooth constructor function for principal coordinate ridge regression fitted by 
 }
 \section{Details}{
 
-The constructor is not normally called directly, but is rather used internally by \code{\link{gam}}. To use for basis setup it is recommended to use \code{\link{smooth.construct2}}.
+The constructor is not normally called directly, but is rather used internally by \code{\link{gam}}.
 
 In a \code{\link[mgcv]{gam}} term of the above form \code{s(dummy, bs="pco", k, xt)}, 
 \itemize{
-\item \code{dummy} is an arbitrary vector whose length is the number of observations. This is not actually used, but is required as part of the input to \code{\link[mgcv]{s}}.
-\item \code{k} is the number of principal coordinates (e.g., \code{k=9} will give a 9-dimensional multidimensional scaling projection).
+\item \code{dummy} is an arbitrary vector (or name of a column in \code{data}) whose length is the number of observations. This is not actually used, but is required as part of the input to \code{\link[mgcv]{s}}. Note that if multiple \code{pco} terms are used in the model, there must be multiple unique term names (e.g., "\code{dummy1}", "\code{dummy2}", etc).
+\item \code{k} is the number of principal coordinates (e.g., \code{k=9} will give a 9-dimensional projection of the data).
 \item \code{xt} is a list supplying the distance information, in one of two ways. (i) A matrix \code{Dmat} of distances can be supplied directly via \code{xt=list(D=Dmat,\dots)}. (ii) Alternatively, one can use \code{xt=list(realdata=\dots, dist_fn=\dots, \dots)} to specify a data matrix \code{realdata} and distance function \code{dist_fn}, whereupon a distance matrix \code{dist_fn(realdata)} is created.
 }
 The list \code{xt} also has the following optional elements:
