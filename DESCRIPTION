@@ -10,6 +10,9 @@ Depends:
     R (>= 3.0.0),
     mgcv
 Suggests:
-    dtw
+    dtw,
+    knitr,
+    rmarkdown
 License: GPL (>= 2)
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
