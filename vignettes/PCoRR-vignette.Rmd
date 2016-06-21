@@ -116,18 +116,18 @@ We then loop through each candidate number `k.`\ of PCos from 1 to 15. For each 
 
 ```{r message=FALSE}
 for (k. in 1:15) {
-    m1 <- gam(y.toy ~ s(dummy, bs="pco", k=k., 
-                        xt=list(realdata=X.toy, dist_fn=dist, fastcmd=FALSE)),
+    m1 <- gam(y.toy ~ s(dummy, bs="pco", k=k.,
+                        xt=list(realdata=X.toy, dist_fn=dist)),
               method="REML")
-    m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k., 
-                        xt=list(D=D.dtw, fastcmd=FALSE)), 
+    m2 <- gam(y.toy ~ s(dummy, bs="pco", k=k.,
+                        xt=list(D=D.dtw)),
               method="REML")
     GCVmat[k., ] <- 30 * c(sum(m1$residuals^2) / m1$df.residual^2,
                            sum(m2$residuals^2) / m2$df.residual^2)
 }
 ```
 
-As we can see in the middle panel of the Figure 3, PCoRR based on DTW distance attains much lower GCV values than ridge regression on leading PC's. 
+As we can see in the middle panel of the Figure 3, PCoRR based on DTW distance attains much lower GCV values than ridge regression on leading PC's.
 
 ```{r, fig.width=9, fig.height=3, fig.cap="Left: DTW distance matrix; middle: GCV performance of PCR and DTW-based PCoRR methods; right: hat matrix for the DTW-based PCoRR model with 10 PCos."}
 par(mfrow=c(1,3))
@@ -139,13 +139,13 @@ image.plot(as.matrix(D.dtw)[ , 30:1], axes=FALSE,
 
 par(mar=c(5.1, 4.9, 4.1, 1.6))
 
-matplot(GCVmat, lty=1:2, col=1, pch=16:17, type="o", ylab="GCV", 
-        xlab="Number of principal components / coordinates", 
+matplot(GCVmat, lty=1:2, col=1, pch=16:17, type="o", ylab="GCV",
+        xlab="Number of principal components / coordinates",
         main="Predictive performance")
-legend("right", c("PCR", "DTW-based PCoRR"), lty=1:2, pch=16:17) 
+legend("right", c("PCR", "DTW-based PCoRR"), lty=1:2, pch=16:17)
 
 # Hat matrix for fit with 10 PCos
-gg <- gam(y.toy ~ s(dummy, bs="pco", k=10, xt=list(D=D.dtw, fastcmd=FALSE)),
+gg <- gam(y.toy ~ s(dummy, bs="pco", k=10, xt=list(D=D.dtw)),
           method="REML")
 
 hatmat <- cmd$points[,1:10] %*% diag(1/(cmd$eig[1:10]+gg$sp)) %*%
