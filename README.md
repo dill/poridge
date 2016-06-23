@@ -16,7 +16,7 @@ devtools::install_github("dill/poridge")
 
 # Future development
 
-The functions in `poridge` are available via the [`refund` package](https://github.com/refunders/refund)'s development branch. These methods will be available in the next [CRAN release](http://cran.r-project.org/package=refund).
+The functions in `poridge` are available via the [`refund` package](https://github.com/refunders/refund)'s development branch. These methods will be available in the next [CRAN release](http://cran.r-project.org/package=refund) (c. July 2016).
 
 
 # References
