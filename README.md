@@ -3,8 +3,6 @@
 
 An `R` package for principal coordinate ridge regression fitted by 'gam' (using `mgcv`). When the principal coordinates are defined by a relevant distance among functional predictors, this is a form of nonparametric scalar-on-function regression. Reiss et al. (2016) describe the approach and apply it to dynamic time warping distances among functional predictors.
 
-An example (toy) analysis is shown [in the vignette](https://github.com/dill/poridge/blob/master/vignettes/PCoRR-vignette.pdf).
-
 # Installation
 
 The package can be installed via the `devtools` package directly from github using the following code:
@@ -13,6 +11,11 @@ The package can be installed via the `devtools` package directly from github usi
 install.packages("devtools")
 devtools::install_github("dill/poridge")
 ```
+
+# Example usage
+
+An example (toy) analysis is shown [in the package vignette](https://github.com/dill/poridge/blob/master/vignettes/PCoRR-vignette.pdf).
+
 
 # Future development
 
